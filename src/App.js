@@ -3,96 +3,91 @@ import Product from "./components/product";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/header";
-
-const products = [
-  {
-    id: 1,
-    name: "Dapper Dan",
-    description: "Long-haired, cute AF, ready for all the pets.",
-    img:
-      "https://images.unsplash.com/photo-1498100152307-ce63fd6c5424?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
-    price: 300,
-  },
-  {
-    id: 2,
-    name: "Jelly Bean",
-    description: "Green-eyes, sharp claws, big ears, all the meows.",
-    img:
-      "https://images.pexels.com/photos/617278/pexels-photo-617278.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    price: 275,
-  },
-  {
-    id: 3,
-    name: "Midnight",
-    description: "Sleek, stealthy, hunter of the night.",
-    img:
-      "https://images.unsplash.com/photo-1503431128871-cd250803fa41?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
-    price: 400,
-  },
-  {
-    id: 4,
-    name: "Derps McGee",
-    description: "Super cute, super dumb.",
-    img: "https://i.insider.com/5d24d6b921a861093e71fef3",
-    price: 600,
-  },
-  {
-    id: 5,
-    name: "Bartholemue",
-    description: "This noble beast has zero time for you.",
-    img:
-      "https://thenypost.files.wordpress.com/2019/12/cat.jpg?quality=80&strip=all",
-    price: 250,
-  },
-  {
-    id: 6,
-    name: "Phats",
-    description:
-      "Don't let his cuteness fool you, if you touch that belly, he will murder you in your sleep.",
-    img:
-      "https://www.rd.com/wp-content/uploads/2019/09/Cute-cat-lying-on-his-back-on-the-carpet.-Breed-British-mackerel-with-yellow-eyes-and-a-bushy-mustache.-Close-up-e1573490045672.jpg",
-    price: 275,
-  },
-  {
-    id: 7,
-    name: "Sleepy",
-    description:
-      "Despite her calm demeanor, Sleepy kitty slays the mice. All. Night. Long.",
-    img:
-      "https://d17fnq9dkz9hgj.cloudfront.net/uploads/2018/03/Russian-Blue_01.jpg",
-    price: 300,
-  },
-  {
-    id: 8,
-    name: "Happy",
-    description:
-      "The only things that outweighs Happy's joy, are her sad looks.",
-    img:
-      "https://www.catster.com/wp-content/uploads/2018/05/A-gray-cat-crying-looking-upset.jpg",
-    price: 500,
-  },
-];
+import PRODUCTS from "./components/productsArray";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 class App extends Component {
   constructor(props) {
     super(props);
+
+    this.toggleModal = this.toggleModal.bind(this);
+
     this.state = {
-      name: "React",
-      cart: {},
+      isModalOpen: false,
+      products: PRODUCTS,
+      cart: [],
     };
   }
 
+  toggleModal() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen,
+    });
+  }
+
+  handleAddCat(cat) {
+    const cartedCat = this.state.cart.filter((c) => c.id === cat.id);
+
+    if (cartedCat.length > 0) {
+      const notCartedCat = this.state.cart.filter((c) => c.id !== cat.id);
+      const updatedQty = {
+        ...cartedCat[0],
+        units: cartedCat[0].units + cat.units,
+      };
+
+      this.setState({
+        cart: [...notCartedCat, updatedQty],
+      });
+    } else {
+      this.setState({
+        cart: [...this.state.cart, cat],
+      });
+    }
+    console.log(this.state.cart);
+  }
   render() {
+    const cartContents = this.state.cart.map((c) => (
+      <li>
+        {c.name} : Qty {c.units}
+      </li>
+    ));
+
     return (
       <React.Fragment>
         <Header />
         <div className="container">
+          <div>
+            <Button onClick={this.toggleModal} className="cart">
+              View Cart
+            </Button>
+          </div>
           <div className="row">
-            {products.map((cat) => (
-              <Product key={cat.id} {...cat} />
+            {this.state.products.map((cat) => (
+              <Product
+                key={cat.id}
+                {...cat}
+                addCat={this.handleAddCat.bind(this)}
+              />
             ))}
           </div>
         </div>
+        <Modal
+          centered
+          isOpen={this.state.isModalOpen}
+          toggle={this.toggleModal}
+        >
+          <ModalHeader toggle={this.toggleModal}>
+            Shopping Cart Contents
+          </ModalHeader>
+          <ModalBody>
+            <ul>{cartContents}</ul>
+          </ModalBody>
+          <ModalFooter>
+            <Button className="bg-secondary" onClick={this.toggleModal}>
+              Close
+            </Button>
+          </ModalFooter>
+        </Modal>
       </React.Fragment>
     );
   }

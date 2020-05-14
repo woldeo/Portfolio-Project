@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Jumbotron } from "reactstrap";
+import { Jumbotron,  } from "reactstrap";
 
 
 
@@ -9,7 +9,7 @@ class Header extends Component {
   render() {
     return (
       <React.Fragment>
-        <Jumbotron fluid>
+        <Jumbotron fluid className="mb-0">
           <div className="container">
             <div className="row text-center">
               <div className="col">

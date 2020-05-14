@@ -11,6 +11,7 @@ import {
   ModalBody,
   ModalFooter,
   Table,
+  Navbar,
 } from "reactstrap";
 
 class App extends Component {
@@ -19,6 +20,7 @@ class App extends Component {
 
     this.toggleModal = this.toggleModal.bind(this);
     this.clearCart = this.clearCart.bind(this);
+    this.lessCats = this.lessCats.bind(this);
 
     this.state = {
       isModalOpen: false,
@@ -35,8 +37,24 @@ class App extends Component {
 
   clearCart() {
     this.setState({
-    cart: [],
-  })
+      cart: [],
+    });
+  }
+
+  lessCats(cat) {
+    const cartedCats = this.state.cart.filter((c) => c.id === cat.id);
+
+    if (cartedCats.length > 0) {
+      const notCartedCats = this.state.cart.filter((c) => c.id !== cat.id);
+      const updatedQty = {
+        ...cartedCats[0],
+        units: cartedCats[0].units - 1,
+      };
+
+      this.setState({
+        cart: [...notCartedCats, updatedQty],
+      });
+    }
   }
 
   handleAddCat(cat) {
@@ -46,15 +64,17 @@ class App extends Component {
       const notCartedCats = this.state.cart.filter((c) => c.id !== cat.id);
       const updatedQty = {
         ...cartedCats[0],
-        units: cartedCats[0].units + cat.units,
+        units: cartedCats[0].units + 1,
       };
 
       this.setState({
         cart: [...notCartedCats, updatedQty],
       });
     } else {
+      const newCat = cat;
+      newCat.units = 1;
       this.setState({
-        cart: [...this.state.cart, cat],
+        cart: [...this.state.cart, newCat],
       });
     }
   }
@@ -78,12 +98,22 @@ class App extends Component {
             <td>${c.price * c.units}</td>
             <td>{c.units}</td>
             <td>
-              <Button outline size="sm" color="success">
+              <Button
+                onClick={() => this.handleAddCat(c)}
+                outline
+                size="sm"
+                color="success"
+              >
                 Add
               </Button>
             </td>
             <td>
-              <Button outline size="sm" color="danger">
+              <Button
+                onClick={() => this.lessCats(c)}
+                outline
+                size="sm"
+                color="danger"
+              >
                 Delete
               </Button>
             </td>
@@ -103,13 +133,14 @@ class App extends Component {
     return (
       <React.Fragment>
         <Header />
-        <div className="container">
-          <div>
-            <Button onClick={this.toggleModal} className="cart bg-primary">
+        <Navbar className="brick">
+        <Button onClick={this.toggleModal} className="cart bg-danger">
               View Cart
             </Button>
-          </div>
-          <div className="row">
+          </Navbar>
+        <div className="container-fluid backdrop">
+            
+          <div className="row justify-content-around">
             {this.state.products.map((cat) => (
               <Product
                 key={cat.id}
@@ -131,7 +162,9 @@ class App extends Component {
             <div>{this.cartContents()}</div>
           </ModalBody>
           <ModalFooter>
-            <Button className="bg-danger" onClick={this.clearCart}>Empty Cart</Button>
+            <Button className="bg-danger" onClick={this.clearCart}>
+              Empty Cart
+            </Button>
             <Button className="bg-secondary" onClick={this.toggleModal}>
               Close
             </Button>

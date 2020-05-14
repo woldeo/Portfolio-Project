@@ -64,7 +64,15 @@ const PRODUCTS = [
       img:
         "https://www.catster.com/wp-content/uploads/2018/05/A-gray-cat-crying-looking-upset.jpg",
       price: 500,
-    },
+  },
+  {
+    id: 9,
+    name: "Dave",
+    description: "Loves chicken strips, sleep, and being a jerk to kids. Not a family cat.",
+    img:
+      "https://static.nationalgeographic.co.uk/files/cat-whisperers-nationalgeographic_1048225.jpg",
+    price: 5,
+  },
 ]; 
   
 export default PRODUCTS;

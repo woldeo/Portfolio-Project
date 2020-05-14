@@ -3,6 +3,7 @@ import Product from "./components/product";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/header";
+import Footer from "./components/footer";
 import PRODUCTS from "./components/productsArray";
 import {
   Button,
@@ -11,7 +12,6 @@ import {
   ModalBody,
   ModalFooter,
   Table,
-  Navbar,
 } from "reactstrap";
 
 class App extends Component {
@@ -133,13 +133,14 @@ class App extends Component {
     return (
       <React.Fragment>
         <Header />
-        <Navbar className="brick">
-        <Button onClick={this.toggleModal} className="cart bg-danger">
+        <div className="row text-center justify-content-around brick">
+          <div className="col-4 align-self-center">
+            <Button onClick={this.toggleModal} className="bg-danger">
               View Cart
             </Button>
-          </Navbar>
+          </div>
+        </div>
         <div className="container-fluid backdrop">
-            
           <div className="row justify-content-around">
             {this.state.products.map((cat) => (
               <Product
@@ -170,6 +171,7 @@ class App extends Component {
             </Button>
           </ModalFooter>
         </Modal>
+        <Footer />
       </React.Fragment>
     );
   }

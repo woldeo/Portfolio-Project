@@ -27,7 +27,7 @@
 
 .cart {
   max-height: 50px;
-  margin-left: 93%;
+  /* margin-left: 47%; */
   margin-bottom: 2%;
   margin-top: 10px;
 }
@@ -44,6 +44,9 @@
 
 .brick {
   background-color: rgb(0, 0, 0);
-  height: 75px;
+  height: 100px;
+  color: white;
 }
+
+
 
